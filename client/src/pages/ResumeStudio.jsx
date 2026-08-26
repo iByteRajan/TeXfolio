@@ -1,67 +1,70 @@
-import { useState } from "react";
-
+import { useEffect, useState, useRef, useCallback } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
-
-import TemplateSelector from "../components/TemplateSelector";
 import LatexEditor from "../components/LatexEditor";
 import PdfPreview from "../components/PdfPreview";
 
+const templateNames = {
+    modern: "Modern",
+    classic: "Classic"
+};
+
 const ResumeStudio = () => {
-    const [selectedTemplate, setSelectedTemplate] =
-        useState("modern");
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const templateId = searchParams.get("template") || "modern";
+    const templateName = templateNames[templateId] || templateId;
 
     const [latex, setLatex] = useState("");
     const [pdfUrl, setPdfUrl] = useState(null);
-
     const [generating, setGenerating] = useState(false);
     const [compiling, setCompiling] = useState(false);
 
-    const generateLatex = async () => {
-        try {
-            setGenerating(true);
+    // =========================
+    // RESIZER STATE
+    // =========================
+    const [leftWidth, setLeftWidth] = useState(50); // Tracks width in percentage
+    const [isResizing, setIsResizing] = useState(false);
+    const containerRef = useRef(null);
 
-            const response = await api.post(
-                "/render",
-                {
-                    templateId: selectedTemplate
-                }
-            );
+    const startResizing = useCallback(() => setIsResizing(true), []);
+    const stopResizing = useCallback(() => setIsResizing(false), []);
 
-            setLatex(response.data.latex);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setGenerating(false);
+    const resize = useCallback((e) => {
+        if (isResizing && containerRef.current) {
+            const containerRect = containerRef.current.getBoundingClientRect();
+            // Calculate mouse position relative to the container
+            const newWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+            
+            // Clamp the widths between 20% and 80% so panels don't disappear
+            if (newWidth > 20 && newWidth < 80) {
+                setLeftWidth(newWidth);
+            }
         }
-    };
+    }, [isResizing]);
 
-    const compileLatex = async () => {
+    useEffect(() => {
+        if (isResizing) {
+            window.addEventListener("mousemove", resize);
+            window.addEventListener("mouseup", stopResizing);
+        }
+        return () => {
+            window.removeEventListener("mousemove", resize);
+            window.removeEventListener("mouseup", stopResizing);
+        };
+    }, [isResizing, resize, stopResizing]);
+
+    // =========================
+    // API FUNCTIONS
+    // =========================
+    const compileLatex = async (latexToCompile) => {
+        if (!latexToCompile) return;
         try {
             setCompiling(true);
-
-            const response = await api.post(
-                "/render/compile",
-                {
-                    latex
-                },
-                {
-                    responseType: "blob"
-                }
-            );
-
-            const blob = new Blob(
-                [response.data],
-                {
-                    type: "application/pdf"
-                }
-            );
-
+            const response = await api.post("/render/compile", { latex: latexToCompile }, { responseType: "blob" });
+            const blob = new Blob([response.data], { type: "application/pdf" });
             const url = URL.createObjectURL(blob);
-
-            if (pdfUrl) {
-                URL.revokeObjectURL(pdfUrl);
-            }
-
+            if (pdfUrl) URL.revokeObjectURL(pdfUrl);
             setPdfUrl(url);
         } catch (error) {
             console.error(error);
@@ -70,113 +73,118 @@ const ResumeStudio = () => {
         }
     };
 
+    const generateLatex = async () => {
+        try {
+            setGenerating(true);
+            const response = await api.post("/render", { templateId });
+            const generatedLatex = response.data.latex;
+            setLatex(generatedLatex);
+            await compileLatex(generatedLatex);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setGenerating(false);
+        }
+    };
+
+    useEffect(() => {
+        generateLatex();
+    }, [templateId]);
+
+
     return (
-        <div
-            style={{
-                width: "100%",
-                maxWidth: "1400px",
-                margin: "0 auto",
-                padding: "20px",
-                boxSizing: "border-box"
-            }}
-        >
-            <h1>Resume Studio</h1>
-
-            {/* Controls */}
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "15px",
-                    marginBottom: "20px"
-                }}
-            >
-                <TemplateSelector
-                    onSelect={setSelectedTemplate}
-                />
-
-                <button
-                    onClick={generateLatex}
-                    disabled={generating}
-                >
-                    {generating
-                        ? "Generating..."
-                        : "Generate LaTeX"}
-                </button>
-            </div>
-
-            {/* Editor + Preview */}
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                        "minmax(0, 1fr) minmax(0, 1fr)",
-                    gap: "20px",
-                    width: "100%"
-                }}
-            >
-                {/* LaTeX Editor */}
+        <div className="h-screen flex flex-col bg-gray-100">
+            <main className="flex-1 min-h-0 p-4">
+                
+                {/* 
+                  Converted from Grid to Flex. 
+                  select-none prevents text from highlighting while dragging.
+                */}
                 <div
-                    style={{
-                        minWidth: 0
-                    }}
+                    ref={containerRef}
+                    className={`h-full min-h-0 flex gap-2 ${isResizing ? "select-none" : ""}`}
                 >
-                    <h2>LaTeX</h2>
 
-                    <div
-                        style={{
-                            width: "100%",
-                            height: "650px",
-                            overflow: "hidden"
-                        }}
+                    {/* ========================= */}
+                    {/* LATEX EDITOR              */}
+                    {/* ========================= */}
+                    <section
+                        style={{ width: `${leftWidth}%` }}
+                        className="min-w-[20%] min-h-0 bg-white rounded-xl border overflow-hidden flex flex-col"
                     >
-                        <LatexEditor
-                            value={latex}
-                            onChange={setLatex}
-                        />
-                    </div>
+                        {/* Editor Toolbar */}
+                        <div className="h-12 shrink-0 flex items-center justify-between px-4 bg-gray-50 border-b">
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => navigate("/templates")}
+                                    className="text-sm text-gray-600 hover:text-gray-900 transition"
+                                >
+                                    ← Back to Templates
+                                </button>
+                                <div className="h-5 w-px bg-gray-300" />
+                                <span className="text-sm font-medium text-gray-700">
+                                    {templateName}
+                                </span>
+                            </div>
 
+                            <button
+                                onClick={() => compileLatex(latex)}
+                                disabled={compiling || generating || !latex}
+                                className="rounded-md bg-green-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50 transition"
+                            >
+                                {generating ? "Generating..." : compiling ? "Compiling..." : "Compile"}
+                            </button>
+                        </div>
+
+                        {/* Monaco Editor */}
+                        <div className="flex-1 min-h-0">
+                            <LatexEditor value={latex} onChange={setLatex} />
+                        </div>
+                    </section>
+
+
+                    {/* ========================= */}
+                    {/* DRAG HANDLE               */}
+                    {/* ========================= */}
                     <div
-                        style={{
-                            marginTop: "10px"
-                        }}
+                        onMouseDown={startResizing}
+                        className="w-2 rounded bg-gray-200 cursor-col-resize hover:bg-blue-400 active:bg-blue-600 transition-colors flex-shrink-0"
+                    />
+
+
+                    {/* ========================= */}
+                    {/* PDF PREVIEW               */}
+                    {/* ========================= */}
+                    <section
+                        style={{ width: `${100 - leftWidth}%` }}
+                        className="min-w-[20%] min-h-0 bg-white rounded-xl border overflow-hidden flex flex-col relative"
                     >
-                        <button
-                            onClick={compileLatex}
-                            disabled={
-                                compiling ||
-                                !latex
-                            }
-                        >
-                            {compiling
-                                ? "Compiling..."
-                                : "Compile"}
-                        </button>
-                    </div>
+                        {/* 
+                           IFRAME OVERLAY: 
+                           Prevents the iframe from swallowing mouse events during drag. 
+                        */}
+                        {isResizing && (
+                            <div className="absolute inset-0 z-50 cursor-col-resize bg-transparent" />
+                        )}
+
+                        {/* Preview Toolbar */}
+                        <div className="h-12 shrink-0 flex items-center justify-between px-4 bg-gray-50 border-b">
+                            <span className="text-sm font-medium text-gray-700">Preview</span>
+                            {pdfUrl && (
+                                <a href={pdfUrl} target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:underline">
+                                    Open PDF
+                                </a>
+                            )}
+                        </div>
+
+                        {/* PDF */}
+                        <div className="flex-1 min-h-0 overflow-auto bg-gray-100">
+                            <PdfPreview pdfUrl={pdfUrl} />
+                        </div>
+                    </section>
+
                 </div>
-
-                {/* PDF Preview */}
-                <div
-                    style={{
-                        minWidth: 0
-                    }}
-                >
-                    <h2>Preview</h2>
-
-                    <div
-                        style={{
-                            width: "100%",
-                            height: "650px",
-                            border: "1px solid #ccc",
-                            overflow: "auto"
-                        }}
-                    >
-                        <PdfPreview
-                            pdfUrl={pdfUrl}
-                        />
-                    </div>
-                </div>
-            </div>
+            </main>
         </div>
     );
 };

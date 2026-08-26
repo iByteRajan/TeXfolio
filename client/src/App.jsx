@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import ResumeStudio from "./pages/ResumeStudio";
+import TemplateSelection from "./pages/TemplateSelection";
 
 const ProtectedRoute = ({ children }) => {
     const { user, loading } = useAuth();
@@ -64,12 +65,13 @@ function AppRoutes() {
             />
 
             <Route
+                path="/templates"
+                element={<TemplateSelection />}
+            />
+
+            <Route
                 path="/studio"
-                element={
-                    <ProtectedRoute>
-                        <ResumeStudio />
-                    </ProtectedRoute>
-                }
+                element={<ResumeStudio />}
             />
         </Routes>
     );
