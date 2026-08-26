@@ -1,0 +1,16 @@
+node_modules/
+
+.env
+
+dist/
+
+.DS_Store
+
+# LaTeX generated files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
