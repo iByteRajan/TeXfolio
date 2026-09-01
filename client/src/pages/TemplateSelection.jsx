@@ -76,7 +76,6 @@ const TemplateSelection = () => {
                         </div>
                     ))}
                 </div>
-                
             </div>
         </div>
     );

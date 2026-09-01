@@ -17,6 +17,14 @@ const renderRoutes = require(
     "./routes/renderRoutes"
 );
 
+const tailoringRoutes =
+    require("./routes/tailoringRoutes");
+
+
+app.use(
+    "/api/tailoring",
+    tailoringRoutes
+);
 
 app.use(
     cors({
