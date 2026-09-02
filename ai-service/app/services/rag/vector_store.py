@@ -1,35 +1,26 @@
+from pathlib import Path
 from typing import List
 
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
-from app.config import settings
-from app.services.rag.embeddings import (
-    get_embeddings
-)
+from app.services.rag.embeddings import get_embeddings
 
 
 COLLECTION_NAME = "resume_documents"
+
+# Store Chroma data inside the ai-service directory.
+CHROMA_DB_PATH = Path(__file__).resolve().parents[3] / "chroma_db"
 
 
 def get_vector_store():
 
     embeddings = get_embeddings()
 
-
     return Chroma(
-
-        collection_name=
-            COLLECTION_NAME,
-
-        embedding_function=
-            embeddings,
-
-        host=
-            settings.CHROMA_HOST,
-
-        port=
-            settings.CHROMA_PORT
+        collection_name=COLLECTION_NAME,
+        embedding_function=embeddings,
+        persist_directory=str(CHROMA_DB_PATH)
     )
 
 
@@ -40,7 +31,6 @@ def delete_resume_documents(
 ):
 
     vector_store.delete(
-
         where={
             "$and": [
                 {
@@ -60,10 +50,7 @@ def index_resume(
     resume_id: str
 ):
 
-    vector_store = (
-        get_vector_store()
-    )
-
+    vector_store = get_vector_store()
 
     # ------------------------------------------------
     # Remove the old version of this resume.
@@ -78,11 +65,8 @@ def index_resume(
         resume_id
     )
 
-
     if not documents:
-
         return vector_store
-
 
     # ------------------------------------------------
     # Generate deterministic IDs.
@@ -91,7 +75,6 @@ def index_resume(
     # ------------------------------------------------
 
     document_ids = []
-
 
     for document in documents:
 
@@ -105,7 +88,6 @@ def index_resume(
             "unknown"
         )
 
-
         document_id = (
             f"{user_id}:"
             f"{resume_id}:"
@@ -113,18 +95,11 @@ def index_resume(
             f"{item_id}"
         )
 
-
-        document_ids.append(
-            document_id
-        )
-
+        document_ids.append(document_id)
 
     vector_store.add_documents(
-
         documents=documents,
-
         ids=document_ids
     )
-
 
     return vector_store

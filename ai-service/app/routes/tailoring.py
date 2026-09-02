@@ -1,32 +1,16 @@
 from fastapi import APIRouter, HTTPException
+import traceback
 
-from app.schemas.request import (
-    TailoringRequest
+from app.schemas.request import TailoringRequest
+from app.schemas.response import TailoringResponse, RAGResponse
+
+from app.services.rag.document_builder import build_resume_documents
+from app.services.rag.vector_store import index_resume
+
+from app.services.tailoring.tailoring_pipeline import (
+    run_tailoring_pipeline
 )
 
-from app.schemas.response import (
-    TailoringResponse
-)
-
-from app.services.rag.document_builder import (
-    build_resume_documents
-)
-
-from app.services.rag.vector_store import (
-    index_resume
-)
-
-from app.services.tailoring.jd_parser import (
-    parse_job_description
-)
-
-from app.services.tailoring.resume_tailor import (
-    tailor_resume
-)
-
-from app.services.rag.rag_pipeline import (
-    run_resume_rag
-)
 
 router = APIRouter(
     prefix="/api/tailoring",
@@ -34,153 +18,111 @@ router = APIRouter(
 )
 
 
-@router.post(
-    "/generate",
-    response_model=TailoringResponse
-)
-async def generate_tailored_resume(
-    request: TailoringRequest
-):
+@router.post("/generate", response_model=TailoringResponse)
+async def generate_tailored_resume(request: TailoringRequest):
+
+    print("\n" + "=" * 60)
+    print("TAILORING REQUEST STARTED")
+    print("=" * 60)
 
     try:
 
-        # =================================================
-        # 1. Convert master resume into RAG documents
-        # =================================================
+        # --------------------------------------------------
+        # STEP 1: Build resume documents
+        # --------------------------------------------------
+
+        print("\n[1] Building resume documents...")
 
         documents = build_resume_documents(
-
             resume=request.master_resume,
-
             user_id=request.user_id,
-
             resume_id=request.resume_id
         )
 
+        print(f"[1] Documents created: {len(documents)}")
 
         if not documents:
-
             raise HTTPException(
-
                 status_code=400,
-
-                detail=(
-                    "Master resume contains "
-                    "no usable information."
-                )
+                detail="Master resume contains no usable information."
             )
 
 
-        # =================================================
-        # 2. Index the resume
-        #
-        # Old documents for this resume are removed first.
-        # =================================================
+        # --------------------------------------------------
+        # STEP 2: Index resume
+        # --------------------------------------------------
+
+        print("\n[2] Indexing resume...")
 
         index_resume(
-
             documents=documents,
-
             user_id=request.user_id,
-
             resume_id=request.resume_id
         )
 
+        print("[2] Resume indexed successfully")
 
-        # =================================================
-        # 3. Analyze the Job Description
-        # =================================================
 
-        job_analysis = (
-            parse_job_description(
-                request.job_description
-            )
+        # --------------------------------------------------
+        # STEP 3: Run tailoring pipeline
+        # --------------------------------------------------
+
+        print("\n[3] Running tailoring pipeline...")
+
+        result = run_tailoring_pipeline(
+            job_description=request.job_description,
+            user_id=request.user_id,
+            resume_id=request.resume_id,
+            config=request.config,
+            master_resume=request.master_resume
         )
 
-
-        # =================================================
-        # 4. Build retrieval query
-        # =================================================
-
-        rag_result = run_resume_rag(
-
-            job_analysis=
-                job_analysis,
-
-            user_id=
-                request.user_id,
-
-            resume_id=
-                request.resume_id
-        )
-
-        relevant_documents = (
-            rag_result["context"]
-        )
+        print("[3] Tailoring pipeline completed successfully")
 
 
+        # --------------------------------------------------
+        # STEP 4: Build response
+        # --------------------------------------------------
 
-        # =================================================
-        # 6. Tailor the resume
-        # =================================================
+        print("\n[4] Building response...")
 
-        tailored_resume = (
-
-            tailor_resume(
-
-                job_description=
-                    request.job_description,
-
-                job_analysis=
-                    job_analysis,
-
-                relevant_documents=
-                    relevant_documents,
-
-                config=
-                    request.config
-            )
-        )
-
-
-        # =================================================
-        # 7. Return result
-        # =================================================
-
-        return TailoringResponse(
-
-            tailored_resume=
-                tailored_resume,
-
-            jd_analysis=
-                job_analysis.model_dump(),
-
+        response = TailoringResponse(
+            tailored_resume=result["tailored_resume"],
+            jd_analysis=result["job_analysis"].model_dump(),
             rag=RAGResponse(
-
-                queries=
-                    rag_result["queries"],
-
-                context=
-                    rag_result["context"]
+                queries=result["retrieval_queries"],
+                context=result["retrieved_context"]
             )
         )
+
+        print("[4] Response built successfully")
+
+        print("\n" + "=" * 60)
+        print("TAILORING REQUEST SUCCESS")
+        print("=" * 60)
+
+        return response
 
 
     except HTTPException:
-
         raise
 
 
     except Exception as error:
 
-        print(
-            "Tailoring error:",
-            error
-        )
+        print("\n" + "=" * 60)
+        print("TAILORING ERROR")
+        print("=" * 60)
+
+        print("Error type:", type(error).__name__)
+        print("Error:", error)
+
+        print("\nFULL TRACEBACK:")
+        traceback.print_exc()
+
+        print("=" * 60)
 
         raise HTTPException(
-
             status_code=500,
-
             detail=str(error)
         )

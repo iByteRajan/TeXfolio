@@ -6,11 +6,13 @@ const {
 
 const generateLatex = async (
     userId,
-    templateId
+    templateId,
+    tailoredResume = null
 ) => {
-    const resume = await Resume.findOne({
-        userId
-    });
+    const resume =
+        await Resume.findOne({
+            userId
+        });
 
     if (!resume) {
         throw new Error(
@@ -18,10 +20,12 @@ const generateLatex = async (
         );
     }
 
-    const latex = await renderTemplate(
-        templateId,
-        resume
-    );
+    const latex =
+        await renderTemplate(
+            templateId,
+            resume,
+            tailoredResume
+        );
 
     return latex;
 };

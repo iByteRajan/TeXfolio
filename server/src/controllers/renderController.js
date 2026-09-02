@@ -6,10 +6,14 @@ const {
     compileLatex
 } = require("../services/latexCompiler");
 
-const renderResume = async (req, res) => {
+const renderResume = async (
+    req,
+    res
+) => {
     try {
         const {
-            templateId
+            templateId,
+            tailoredResume
         } = req.body;
 
         if (!templateId) {
@@ -22,14 +26,18 @@ const renderResume = async (req, res) => {
         const latex =
             await generateLatex(
                 req.user.id,
-                templateId
+                templateId,
+                tailoredResume || null
             );
 
         res.json({
             latex
         });
     } catch (error) {
-        console.error(error);
+        console.error(
+            "Render error:",
+            error
+        );
 
         res.status(500).json({
             message: error.message
@@ -37,7 +45,10 @@ const renderResume = async (req, res) => {
     }
 };
 
-const compileResume = async (req, res) => {
+const compileResume = async (
+    req,
+    res
+) => {
     try {
         const {
             latex
@@ -52,7 +63,9 @@ const compileResume = async (req, res) => {
 
         const {
             pdf
-        } = await compileLatex(latex);
+        } = await compileLatex(
+            latex
+        );
 
         res.setHeader(
             "Content-Type",
@@ -60,7 +73,6 @@ const compileResume = async (req, res) => {
         );
 
         res.send(pdf);
-
     } catch (error) {
         console.error(error);
 

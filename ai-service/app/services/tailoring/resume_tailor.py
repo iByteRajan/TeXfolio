@@ -61,8 +61,7 @@ from app.services.tailoring.prompts import (
 def tailor_resume(
     job_analysis,
     selected_evidence,
-    config,
-    original_summary=None
+    config
 ) -> TailoredResume:
 
     llm = ChatOpenAI(
@@ -81,8 +80,7 @@ def tailor_resume(
     prompt = build_resume_tailoring_prompt(
         job_analysis=job_analysis,
         selected_evidence=selected_evidence,
-        config=config,
-        original_summary=original_summary
+        config=config
     )
 
     result = structured_llm.invoke(

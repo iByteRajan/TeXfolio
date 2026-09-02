@@ -23,7 +23,6 @@
 }
 
 \begin{document}
-
 % =========================
 % PERSONAL INFORMATION
 % =========================
@@ -34,23 +33,26 @@
     {{personal.email}} \,|\, {{personal.phone}} \,|\, {{personal.location}}
     \vspace{2pt}
 
-    % The LaTeX % trick isolates the Handlebars braces from the LaTeX braces
-    % without injecting any spaces into the final \href command!
-    \href{%
-    {{{personal.github}}}%
-    }{GitHub} \,|\, 
-    \href{%
-    {{{personal.linkedin}}}%
-    }{LinkedIn} \,|\, 
-    \href{%
-    {{{personal.portfolio}}}%
-    }{Portfolio}
+    {{#each personal.links}}
+        {{#if @index}} \,|\, {{/if}}
+        \href{ {{url}} }{ {{label}} }
+    {{/each}}
 \end{center}
+
+% =========================
+% SUMMARY
+% =========================
+{{#if summary}}
+\section{Summary}
+{{summary}}
+{{/if}}
 
 % =========================
 % EDUCATION
 % =========================
+{{#if education}}
 \section{Education}
+
 {{#each education}}
 \textbf{ {{~institution~}} } \hfill {{startDate}} -- {{endDate}}
 
@@ -59,9 +61,11 @@
 {{#if description}}
 {{description}}
 {{/if}}
+
 \vspace{4pt}
 
 {{/each}}
+{{/if}}
 
 % =========================
 % EXPERIENCE

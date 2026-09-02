@@ -3,17 +3,23 @@ const latexEscape = (value) => {
         return "";
     }
 
-    return String(value)
-        .replace(/\\/g, "\\textbackslash{}")
-        .replace(/&/g, "\\&")
-        .replace(/%/g, "\\%")
-        .replace(/\$/g, "\\$")
-        .replace(/#/g, "\\#")
-        .replace(/_/g, "\\_")
-        .replace(/{/g, "\\{")
-        .replace(/}/g, "\\}")
-        .replace(/~/g, "\\textasciitilde{}")
-        .replace(/\^/g, "\\textasciicircum{}");
+    const replacements = {
+        "\\": "\\textbackslash{}",
+        "&": "\\&",
+        "%": "\\%",
+        "$": "\\$",
+        "#": "\\#",
+        "_": "\\_",
+        "{": "\\{",
+        "}": "\\}",
+        "~": "\\textasciitilde{}",
+        "^": "\\textasciicircum{}"
+    };
+
+    return String(value).replace(
+        /[\\&%$#_{}~^]/g,
+        (character) => replacements[character]
+    );
 };
 
 module.exports = latexEscape;

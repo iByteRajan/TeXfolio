@@ -413,6 +413,25 @@ If the summary section is enabled:
 - Do not introduce unsupported technologies.
 - If there is insufficient information,
   return null.
+- You may rephrase or combine supported facts.
+
+You MUST NOT invent:
+- technologies
+- experience
+- job titles
+- companies
+- achievements
+- metrics
+- responsibilities
+- qualifications
+- projects
+
+Do not infer one technology from another.
+
+For example:
+"MERN" alone does not prove that a particular project used
+Node.js, Express.js, or MongoDB unless those technologies are
+explicitly present in the source evidence.
 
 PROJECTS
 ========

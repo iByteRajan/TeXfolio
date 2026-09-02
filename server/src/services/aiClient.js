@@ -7,6 +7,8 @@ const AI_SERVICE_URL =
 
 
 const generateTailoredResume = async ({
+    userId,
+    resumeId,
     jobDescription,
     masterResume,
     config
@@ -15,15 +17,19 @@ const generateTailoredResume = async ({
     const response =
         await axios.post(
             `${AI_SERVICE_URL}/api/tailoring/generate`,
-
             {
+                user_id: String(userId),
+
+                resume_id: String(resumeId),
+
                 job_description:
                     jobDescription,
 
                 master_resume:
                     masterResume,
 
-                config
+                config:
+                    config || {}
             }
         );
 

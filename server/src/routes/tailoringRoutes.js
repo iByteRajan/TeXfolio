@@ -1,17 +1,25 @@
 const express = require("express");
 
-const protect = require("../middleware/authMiddleware");
+const protect = require(
+    "../middleware/authMiddleware"
+);
 
 const {
     tailorResume
-} = require("../controllers/tailoringController");
+} = require(
+    "../controllers/tailoringController"
+);
 
-const router = express.Router();
+
+const router =
+    express.Router();
+
 
 router.post(
     "/generate",
     protect,
     tailorResume
 );
+
 
 module.exports = router;

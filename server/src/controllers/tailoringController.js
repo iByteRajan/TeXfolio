@@ -27,10 +27,15 @@ const tailorResume = async (
         }
 
 
+        // ==========================================
+        // Find authenticated user's master resume
+        // ==========================================
+
         const masterResume =
             await Resume.findOne({
                 userId: req.user.id
             }).lean();
+
 
         if (!masterResume) {
 
@@ -41,8 +46,18 @@ const tailorResume = async (
         }
 
 
+        // ==========================================
+        // Send resume + JD to Python AI service
+        // ==========================================
+
         const result =
             await generateTailoredResume({
+
+                userId:
+                    req.user.id,
+
+                resumeId:
+                    masterResume._id,
 
                 jobDescription,
 
@@ -57,15 +72,10 @@ const tailorResume = async (
             result
         );
 
-    } catch (error) {
+    }catch (error) {
+        console.error("Tailoring error:", error);
 
-        console.error(
-            "Tailoring error:",
-            error
-        );
-
-
-        return res.status(500).json({
+        return res.status(error.response?.status || 500).json({
             message:
                 error.response?.data?.detail ||
                 error.message
