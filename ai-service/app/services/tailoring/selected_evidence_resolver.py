@@ -16,7 +16,8 @@ def resolve_selected_evidence(
         "skills",
         "achievements",
         "education",
-        "certifications"
+        "certifications",
+        "codingProfiles"
     ]
 
     for section in sections:

@@ -259,10 +259,9 @@ SELECTION RULES
 1. Select only evidence that is relevant to
    the target job.
 
-2. Never invent a source_id.
+2. Never invent a source_id. You must use the `item_id` from the metadata of each item.
 
-3. Every selected source_id MUST exist in the
-   provided evidence.
+3. Every selected source_id MUST exist as an `item_id` in the provided evidence.
 
 4. Respect the user's enabled/disabled sections.
 
@@ -354,6 +353,8 @@ CORE RULES
    selected candidate evidence and original
    summary.
 
+   IMPORTANT: For the 'source_id' field in your output, you MUST use the 'item_id' from the corresponding item's metadata in the provided evidence.
+
 2. NEVER invent:
 
    - technologies
@@ -366,6 +367,7 @@ CORE RULES
    - responsibilities
    - dates
    - certifications
+   - coding profiles
    - employers
    - education details
 
@@ -487,6 +489,16 @@ Preserve the actual certification name,
 issuer, date, and description.
 
 Do not invent certification information.
+
+CODING PROFILES
+===============
+
+Only include selected coding profiles.
+
+Preserve the actual platform, username,
+url, rating, problems solved, and contests participated.
+
+Do not invent coding profile information.
 
 OUTPUT
 ======

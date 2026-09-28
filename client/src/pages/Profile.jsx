@@ -89,7 +89,7 @@ const Profile = () => {
 
     return (
         <div className="max-w-5xl mx-auto p-6 font-sans text-gray-800 bg-gray-50 min-h-screen">
-            
+
             {/* Header & Navigation */}
             <div className="flex justify-between items-center mb-8">
                 <div>
@@ -102,7 +102,7 @@ const Profile = () => {
                     {saving ? "Saving..." : "Save Changes"}
                 </button>
             </div>
-            
+
             {message && <p className="mb-4 text-sm font-medium text-green-700 bg-green-100 p-3 rounded">{message}</p>}
 
             {/* PERSONAL */}

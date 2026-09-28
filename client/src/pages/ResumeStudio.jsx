@@ -26,7 +26,8 @@ const defaultSections = {
     projects: true,
     skills: true,
     achievements: true,
-    certifications: true
+    certifications: true,
+    codingProfiles: true
 };
 
 const ResumeStudio = () => {
@@ -333,8 +334,8 @@ const ResumeStudio = () => {
                         projects:
                             projectLimit
                                 ? Number(
-                                      projectLimit
-                                  )
+                                    projectLimit
+                                )
                                 : null
                     },
 
@@ -409,9 +410,9 @@ const ResumeStudio = () => {
                 alert(
                     error.response?.data
                         ?.message ||
-                        error.response?.data
-                            ?.detail ||
-                        "Failed to tailor the resume."
+                    error.response?.data
+                        ?.detail ||
+                    "Failed to tailor the resume."
                 );
             } finally {
                 setGenerating(false);
@@ -437,7 +438,7 @@ const ResumeStudio = () => {
                     ...previous,
                     [sectionName]:
                         !previous[
-                            sectionName
+                        sectionName
                         ]
                 })
             );
@@ -704,11 +705,10 @@ const ResumeStudio = () => {
 
                 <div
                     ref={containerRef}
-                    className={`h-full min-h-0 flex gap-2 ${
-                        isResizing
-                            ? "select-none"
-                            : ""
-                    }`}
+                    className={`h-full min-h-0 flex gap-2 ${isResizing
+                        ? "select-none"
+                        : ""
+                        }`}
                 >
 
                     {/* ========================= */}
@@ -814,10 +814,9 @@ const ResumeStudio = () => {
 
                     <section
                         style={{
-                            width: `${
-                                100 -
+                            width: `${100 -
                                 leftWidth
-                            }%`
+                                }%`
                         }}
                         className="min-w-[20%] min-h-0 bg-white rounded-xl border overflow-hidden flex flex-col relative"
                     >

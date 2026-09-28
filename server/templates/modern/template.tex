@@ -23,6 +23,7 @@
 }
 
 \begin{document}
+
 % =========================
 % PERSONAL INFORMATION
 % =========================
@@ -39,6 +40,7 @@
     {{/each}}
 \end{center}
 
+
 % =========================
 % SUMMARY
 % =========================
@@ -46,6 +48,7 @@
 \section{Summary}
 {{summary}}
 {{/if}}
+
 
 % =========================
 % EDUCATION
@@ -67,76 +70,109 @@
 {{/each}}
 {{/if}}
 
+
 % =========================
 % EXPERIENCE
 % =========================
 {{#if experience}}
 \section{Experience}
+
 {{#each experience}}
 \textbf{ {{~role~}} } \hfill {{startDate}} -- {{endDate}}
 
 \textit{ {{~company~}} } \hfill {{location}}
+
 \begin{itemize}
 {{#each bullets}}
     \item {{this}}
 {{/each}}
 \end{itemize}
+
 {{/each}}
 {{/if}}
+
 
 % =========================
 % PROJECTS
 % =========================
 {{#if projects}}
 \section{Projects}
-{{#each projects}}
-\textbf{ {{~name~}} } \hfill {{technologies}}
 
+{{#each projects}}
+
+% Project title + links
+\noindent
+\textbf{ {{~name~}} }
+\hfill
+{{#if github}}
+\href{ {{~github~}} }{GitHub}
+{{/if}}
+{{#if liveUrl}}
+{{#if github}} \,|\, {{/if}}
+\href{ {{~liveUrl~}} }{Live}
+{{/if}}
+
+% Technologies
+{{#if technologies}}
+\textit{ {{technologies}} }
+{{/if}}
+
+% Description starts on a new line
 {{#if description}}
 {{description}}
 {{/if}}
 
+% Project bullets
 \begin{itemize}
 {{#each bullets}}
     \item {{this}}
 {{/each}}
 \end{itemize}
+
 {{/each}}
 {{/if}}
+
 
 % =========================
 % SKILLS
 % =========================
 {{#if skills}}
 \section{Technical Skills}
+
 {{#each skills}}
 \textbf{ {{~category~}} }: {{items}}
 
 {{/each}}
 {{/if}}
 
+
 % =========================
 % ACHIEVEMENTS
 % =========================
 {{#if achievements}}
 \section{Achievements}
+
 \begin{itemize}
 {{#each achievements}}
     \item \textbf{ {{~title~}} }: {{description}}
 {{/each}}
 \end{itemize}
+
 {{/if}}
+
 
 % =========================
 % CERTIFICATIONS
 % =========================
 {{#if certifications}}
 \section{Certifications}
+
 \begin{itemize}
 {{#each certifications}}
     \item \textbf{ {{~name~}} } -- {{issuer}} ({{date}})
 {{/each}}
 \end{itemize}
+
 {{/if}}
 
 \end{document}

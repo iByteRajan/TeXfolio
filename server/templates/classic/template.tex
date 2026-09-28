@@ -1,0 +1,327 @@
+\documentclass[10pt,a4paper]{article}
+
+% =========================
+% PACKAGES
+% =========================
+\usepackage[margin=0.65in]{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{tabularx}
+
+% =========================
+% GENERAL SETTINGS
+% =========================
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+\setlist[itemize]{
+    leftmargin=1.2em,
+    noitemsep,
+    topsep=1pt,
+    partopsep=0pt,
+    parsep=0pt
+}
+
+% =========================
+% SECTION STYLE
+% =========================
+\titleformat{\section}
+    {\normalsize\bfseries}
+    {}
+    {0em}
+    {\MakeUppercase}
+    [\vspace{-4pt}\titlerule]
+
+\titlespacing*{\section}
+    {0pt}
+    {8pt}
+    {5pt}
+
+% =========================
+% DOCUMENT
+% =========================
+\begin{document}
+
+% =========================================================
+% PERSONAL INFORMATION
+% =========================================================
+
+\begin{center}
+
+    {\LARGE \textbf{ {{~personal.name~}} }}
+
+    \vspace{3pt}
+
+    {{personal.email}}
+    \,|\, 
+    {{personal.phone}}
+    \,|\, 
+    {{personal.location}}
+
+    \vspace{2pt}
+
+    {{#each personal.links}}
+        {{#if @index}} \,|\, {{/if}}
+        \href{ {{url}} }{ {{label}} }
+    {{/each}}
+
+\end{center}
+
+
+% =========================================================
+% SUMMARY
+% =========================================================
+
+{{#if summary}}
+
+\section{Summary}
+
+{{summary}}
+
+{{/if}}
+
+
+% =========================================================
+% EDUCATION
+% =========================================================
+
+{{#if education}}
+
+\section{Education}
+
+{{#each education}}
+
+\textbf{ {{~institution~}} }
+\hfill
+{{startDate}} -- {{endDate}}
+
+\vspace{1pt}
+
+\textit{ {{~degree}} -- {{field~}} }
+\hfill
+{{cgpa}}
+
+{{#if description}}
+\vspace{1pt}
+
+{{description}}
+{{/if}}
+
+\vspace{3pt}
+
+{{/each}}
+
+{{/if}}
+
+
+% =========================================================
+% EXPERIENCE
+% =========================================================
+
+{{#if experience}}
+
+\section{Experience}
+
+{{#each experience}}
+
+\textbf{ {{~role~}} }
+\hfill
+{{startDate}} -- {{endDate}}
+
+\vspace{1pt}
+
+\textit{ {{~company~}} }
+{{#if location}}
+\hfill
+{{location}}
+{{/if}}
+
+\vspace{-1pt}
+
+\begin{itemize}
+
+{{#each bullets}}
+    \item {{this}}
+{{/each}}
+
+\end{itemize}
+
+\vspace{2pt}
+
+{{/each}}
+
+{{/if}}
+
+% =========================================================
+% PROJECTS
+% =========================================================
+
+{{#if projects}}
+
+\section{Projects}
+
+{{#each projects}}
+
+% ---------------------------------------------------------
+% Project title + links
+% ---------------------------------------------------------
+
+\noindent
+\textbf{ {{~name~}} }
+\hfill
+{{#if github}}
+\href{ {{~github~}} }{GitHub}
+{{/if}}
+{{#if liveUrl}}
+{{#if github}}
+\,|\, 
+{{/if}}
+\href{ {{~liveUrl~}} }{Live}
+{{/if}}
+
+% ---------------------------------------------------------
+% Technologies
+% ---------------------------------------------------------
+
+{{#if technologies}}
+\vspace{1pt}
+
+\textit{ {{technologies}} }
+{{/if}}
+
+% ---------------------------------------------------------
+% Description
+% ---------------------------------------------------------
+
+{{#if description}}
+\vspace{1pt}
+
+{{description}}
+{{/if}}
+
+% ---------------------------------------------------------
+% Project bullets
+% ---------------------------------------------------------
+
+\begin{itemize}
+
+{{#each bullets}}
+    \item {{this}}
+{{/each}}
+
+\end{itemize}
+
+% Space between projects
+\vspace{6pt}
+
+{{/each}}
+
+{{/if}}
+
+
+% =========================================================
+% TECHNICAL SKILLS
+% =========================================================
+
+{{#if skills}}
+
+\section{Technical Skills}
+
+{{#each skills}}
+
+\textbf{ {{~category~}} }: {{items}}
+
+{{/each}}
+
+{{/if}}
+
+
+% =========================================================
+% ACHIEVEMENTS
+% =========================================================
+
+{{#if achievements}}
+
+\section{Achievements}
+
+\begin{itemize}
+
+{{#each achievements}}
+    \item
+    \textbf{ {{~title~}} }
+    {{#if description}}
+    -- {{description}}
+    {{/if}}
+{{/each}}
+
+\end{itemize}
+
+{{/if}}
+
+
+% =========================================================
+% CERTIFICATIONS
+% =========================================================
+
+{{#if certifications}}
+
+\section{Certifications}
+
+\begin{itemize}
+
+{{#each certifications}}
+    \item
+    \textbf{ {{~name~}} }
+    {{#if issuer}}
+    -- {{issuer}}
+    {{/if}}
+    {{#if date}}
+    ({{date}})
+    {{/if}}
+{{/each}}
+
+\end{itemize}
+
+{{/if}}
+
+% =========================================================
+% CODING PROFILES
+% =========================================================
+
+{{#if codingProfiles}}
+
+\section{Coding Profiles}
+
+\begin{itemize}
+
+{{#each codingProfiles}}
+    \item
+    \textbf{ {{~platform~}} } -- 
+    {{#if url}}
+    \href{ {{~url~}} }{ {{~username~}} }
+    {{else}}
+    {{username}}
+    {{/if}}
+    {{#if rating}}
+    (Rating: {{rating}}{{#if maxRating}} / {{maxRating}}{{/if}})
+    {{else}}
+    {{#if maxRating}}
+    (Max Rating: {{maxRating}})
+    {{/if}}
+    {{/if}}
+    {{#if problemsSolved}}
+    -- Solved: {{problemsSolved}}
+    {{/if}}
+    {{#if contestsParticipated}}
+    -- Contests: {{contestsParticipated}}
+    {{/if}}
+{{/each}}
+
+\end{itemize}
+
+{{/if}}
+
+
+\end{document}

@@ -28,3 +28,7 @@ class SelectedEvidence(BaseModel):
     certifications: List[str] = Field(
         default_factory=list
     )
+
+    codingProfiles: List[str] = Field(
+        default_factory=list
+    )

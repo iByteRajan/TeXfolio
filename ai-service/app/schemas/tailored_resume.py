@@ -70,6 +70,17 @@ class TailoredCertification(BaseModel):
     description: Optional[str] = None
 
 
+class TailoredCodingProfile(BaseModel):
+    source_id: str
+    platform: str
+    username: str
+    url: Optional[str] = None
+    rating: Optional[int] = None
+    maxRating: Optional[int] = None
+    problemsSolved: Optional[int] = None
+    contestsParticipated: Optional[int] = None
+
+
 class TailoredResume(BaseModel):
 
     summary: Optional[str] = None
@@ -105,7 +116,9 @@ class TailoredResume(BaseModel):
     )
 
     certifications: List[TailoredCertification] = Field(
-    default_factory=list
-)
+        default_factory=list
+    )
 
-    
+    codingProfiles: List[TailoredCodingProfile] = Field(
+        default_factory=list
+    )

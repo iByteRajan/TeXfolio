@@ -18,7 +18,8 @@ def prepare_evidence(
         "skills",
         "achievements",
         "education",
-        "certifications"
+        "certifications",
+        "codingProfiles"
     ]
 
     for section in sections:

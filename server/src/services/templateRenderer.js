@@ -41,7 +41,7 @@ const findSourceItem = (
         (item) =>
             item._id &&
             item._id.toString() ===
-                sourceId.toString()
+            sourceId.toString()
     );
 };
 
@@ -409,10 +409,10 @@ const prepareResumeData = (
                         project.technologies
                     )
                         ? project.technologies.join(
-                              ", "
-                          )
+                            ", "
+                        )
                         : project.technologies ||
-                          ""
+                        ""
             })
         ),
 
@@ -427,8 +427,8 @@ const prepareResumeData = (
                         skill.items
                     )
                         ? skill.items.join(
-                              ", "
-                          )
+                            ", "
+                        )
                         : skill.items || ""
             })
         ),

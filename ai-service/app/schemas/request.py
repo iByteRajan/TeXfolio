@@ -12,6 +12,7 @@ class SectionConfig(BaseModel):
     skills: bool = True
     achievements: bool = True
     certifications: bool = True
+    codingProfiles: bool = True
 
 
 class ResumeLimits(BaseModel):
@@ -20,6 +21,7 @@ class ResumeLimits(BaseModel):
     experience: Optional[int] = None
     achievements: Optional[int] = None
     certifications: Optional[int] = None
+    codingProfiles: Optional[int] = None
 
 
 class ResumeConfig(BaseModel):

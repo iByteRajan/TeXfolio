@@ -23,6 +23,9 @@ __pycache__/
 # Vector database / local data
 .chroma/
 
+# ChromaDB
+ai-service/chroma_db/
+
 # Node
 node_modules/
 
