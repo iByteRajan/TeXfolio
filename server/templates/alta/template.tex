@@ -1,0 +1,338 @@
+
+\documentclass[10pt,a4paper]{article}
+
+% =========================
+% PACKAGES
+% =========================
+\usepackage[margin=0.58in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{paracol}
+
+% =========================
+% COLORS
+% =========================
+\definecolor{accent}{HTML}{176B87}
+\definecolor{dark}{HTML}{202A35}
+\definecolor{muted}{HTML}{596773}
+\definecolor{lightaccent}{HTML}{E7F2F5}
+
+% =========================
+% GENERAL SETTINGS
+% =========================
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\urlstyle{same}
+
+\setlist[itemize]{
+    leftmargin=1.1em,
+    noitemsep,
+    topsep=2pt,
+    partopsep=0pt,
+    parsep=0pt
+}
+
+% =========================
+% SECTION STYLE
+% =========================
+\titleformat{\section}
+    {\normalsize\bfseries\color{accent}}
+    {}
+    {0em}
+    {\MakeUppercase}
+    [\vspace{-2pt}\color{accent}\titlerule]
+
+\titlespacing*{\section}
+    {0pt}
+    {8pt}
+    {4pt}
+
+% =========================
+% DOCUMENT
+% =========================
+\begin{document}
+\color{dark}
+
+% =========================================================
+% HEADER
+% =========================================================
+
+{\fontsize{25}{28}\selectfont
+\bfseries\color{accent}{{~personal.name~}}\par}
+
+\vspace{4pt}
+
+{\small
+{{personal.email}}
+\quad | \quad
+{{personal.phone}}
+\quad | \quad
+{{personal.location}}
+\quad | \quad
+{{#each personal.links}}
+{{#if @index}}
+\quad | \quad
+{{/if}}
+\href{ {{~url~}} }{\textcolor{accent}{ {{~label~}} }}
+{{/each}}
+\par}
+
+\vspace{2pt}
+
+{\color{accent}\rule{\textwidth}{1.2pt}}
+
+\vspace{2pt}
+
+% =========================================================
+% TWO-COLUMN LAYOUT
+% =========================================================
+
+\columnratio{0.65}
+\setlength{\columnsep}{0.28in}
+
+\begin{paracol}{2}
+
+% =========================================================
+% LEFT COLUMN
+% PROFILE, EXPERIENCE, PROJECTS
+% =========================================================
+
+% =========================
+% PROFILE
+% =========================
+
+{{#if summary}}
+\section{Profile}
+
+{{summary}}
+
+{{/if}}
+
+% =========================
+% EXPERIENCE
+% =========================
+
+{{#if experience}}
+\section{Experience}
+
+{{#each experience}}
+
+\textbf{ {{~role~}} }
+\hfill
+{\small\color{muted}
+{{startDate}} -- {{endDate}} }
+
+\par\vspace{1pt}
+
+{\small
+\textit{ {{~company~}} }
+{{#if location}}
+\textbullet\ {{location}}
+{{/if}}
+\par}
+
+{{#if bullets}}
+\vspace{1pt}
+\begin{itemize}
+{{#each bullets}}
+    \item {{this}}
+{{/each}}
+\end{itemize}
+{{/if}}
+
+\vspace{3pt}
+
+{{/each}}
+{{/if}}
+
+% =========================
+% PROJECTS
+% =========================
+
+{{#if projects}}
+\section{Projects}
+
+{{#each projects}}
+
+\noindent
+\textbf{ {{~name~}} }
+\hfill
+{\small
+{{#if github}}
+\href{ {{~github~}} }{GitHub}
+{{/if}}
+{{#if liveUrl}}
+{{#if github}}\,|\,{{/if}}
+\href{ {{~liveUrl~}} }{Live}
+{{/if}}
+}
+\par
+
+
+{{#if technologies}}
+\vspace{2pt}
+{\small\color{muted}
+\textit{Tech Stack:} {{technologies}}\par}
+\vspace{3pt}
+{{/if}}
+
+
+{{#if description}}
+\vspace{1pt}
+{{description}}
+\par
+{{/if}}
+
+{{#if bullets}}
+\begin{itemize}
+{{#each bullets}}
+    \item {{this}}
+{{/each}}
+\end{itemize}
+{{/if}}
+
+\vspace{3pt}
+
+{{/each}}
+{{/if}}
+
+% =========================================================
+% RIGHT COLUMN
+% =========================================================
+
+\switchcolumn
+
+% =========================
+% EDUCATION
+% =========================
+
+{{#if education}}
+\section{Education}
+
+{{#each education}}
+
+\textbf{ {{~institution~}} }\par
+
+{\small\color{muted}
+{{startDate}} -- {{endDate}}\par}
+
+\vspace{1pt}
+
+\textit{ {{~degree}} -- {{field~}} }\par
+
+{{#if cgpa}}
+{\small GPA/CGPA: {{cgpa}}\par}
+{{/if}}
+
+{{#if description}}
+{\small {{description}}\par}
+{{/if}}
+
+\vspace{4pt}
+
+{{/each}}
+{{/if}}
+
+% =========================
+% TECHNICAL SKILLS
+% =========================
+
+{{#if skills}}
+\section{Skills}
+
+{{#each skills}}
+
+\textbf{ {{~category~}} }\par
+
+{\small {{items}}\par}
+
+\vspace{4pt}
+
+{{/each}}
+{{/if}}
+
+% =========================
+% ACHIEVEMENTS
+% =========================
+
+{{#if achievements}}
+\section{Achievements}
+
+\begin{itemize}
+{{#each achievements}}
+    \item
+    \textbf{ {{~title~}} }
+    {{#if description}}
+    : {{description}}
+    {{/if}}
+{{/each}}
+\end{itemize}
+
+{{/if}}
+
+% =========================
+% CERTIFICATIONS
+% =========================
+
+{{#if certifications}}
+\section{Certifications}
+
+\begin{itemize}
+{{#each certifications}}
+    \item
+    \textbf{ {{~name~}} }
+    {{#if issuer}}
+    -- {{issuer}}
+    {{/if}}
+    {{#if date}}
+    ({{date}})
+    {{/if}}
+{{/each}}
+\end{itemize}
+
+{{/if}}
+
+% =========================
+% CODING PROFILES
+% =========================
+
+{{#if codingProfiles}}
+\section{Coding Profiles}
+
+\begin{itemize}
+{{#each codingProfiles}}
+    \item
+    \textbf{ {{~platform~}} } --
+    {{#if url}}
+    \href{ {{~url~}} }{ {{~username~}} }
+    {{else}}
+    {{username}}
+    {{/if}}
+    {{#if rating}}
+    ({{rating}}{{#if maxRating}} / {{maxRating}}{{/if}})
+    {{else}}
+    {{#if maxRating}}
+    (Max: {{maxRating}})
+    {{/if}}
+    {{/if}}
+
+    {{#if problemsSolved}}
+    -- Solved: {{problemsSolved}}
+    {{/if}}
+
+    {{#if contestsParticipated}}
+    -- Contests: {{contestsParticipated}}
+    {{/if}}
+{{/each}}
+\end{itemize}
+
+{{/if}}
+
+\end{paracol}
+
+\end{document}

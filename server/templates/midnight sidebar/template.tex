@@ -1,0 +1,387 @@
+
+\documentclass[10pt,a4paper]{article}
+
+% =========================================================
+% PACKAGES
+% =========================================================
+\usepackage[
+    a4paper,
+    top=0.42in,
+    bottom=0.42in,
+    left=0.42in,
+    right=0.42in
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{tikz}
+\usepackage{eso-pic}
+\usepackage{paracol}
+
+% =========================================================
+% COLORS
+% =========================================================
+\definecolor{sidebar}{HTML}{172554}
+\definecolor{accent}{HTML}{60A5FA}
+\definecolor{heading}{HTML}{172554}
+\definecolor{bodytext}{HTML}{293548}
+\definecolor{muted}{HTML}{64748B}
+\definecolor{sideMuted}{HTML}{CBD5E1}
+\definecolor{divider}{HTML}{B8C5D8}
+
+\hypersetup{
+    colorlinks=true,
+    urlcolor=accent,
+    linkcolor=accent,
+    citecolor=accent
+}
+
+% =========================================================
+% GENERAL SETTINGS
+% =========================================================
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+\setlength{\emergencystretch}{2em}
+\setlength{\columnsep}{0pt}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+
+\setlist[itemize]{
+    leftmargin=1.2em,
+    itemsep=1.5pt,
+    topsep=2pt,
+    parsep=0pt,
+    partopsep=0pt
+}
+
+% =========================================================
+% MAIN SECTION STYLING
+% =========================================================
+\titleformat{\section}
+    {\normalsize\bfseries\color{heading}}
+    {}
+    {0pt}
+    {\MakeUppercase}
+    [\vspace{1pt}{\color{divider}\titlerule[1.5pt]}]
+
+\titlespacing*{\section}
+    {0pt}
+    {9pt}
+    {5pt}
+
+% =========================================================
+% SIDEBAR SEPARATOR
+% =========================================================
+\newcommand{\sidebarseparator}{%
+    \par\vspace{5pt}%
+    {\color{sideMuted!45}\rule{\linewidth}{0.5pt}}%
+    \par\vspace{5pt}%
+}
+
+% =========================================================
+% SIDEBAR BACKGROUND ON EVERY PAGE
+% =========================================================
+\AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture,overlay]
+        \fill[sidebar]
+            (current page.north west)
+            rectangle
+            ([xshift=0.35\paperwidth]current page.south west);
+    \end{tikzpicture}%
+}
+
+% =========================================================
+% DOCUMENT
+% =========================================================
+\begin{document}
+\color{bodytext}
+
+\columnratio{0.34,0.66}
+\setlength{\columnsep}{0.045\textwidth}
+
+\begin{paracol}{2}
+
+% =========================================================
+% SIDEBAR
+% =========================================================
+\switchcolumn[0]
+\color{white}
+
+% NAME
+{\fontsize{21}{24}\selectfont
+\bfseries {{personal.name}}
+\par}
+
+\vspace{5pt}
+{\color{accent}\rule{\linewidth}{2pt}}
+\vspace{5pt}
+
+% =========================================================
+% CONTACT
+% =========================================================
+{\large\bfseries\color{accent}CONTACT\par}
+\vspace{3pt}
+
+{\small\color{sideMuted}
+{{personal.email}}
+\par
+
+{{#if personal.phone}}
+\vspace{3pt}
+{{personal.phone}}
+\par
+{{/if}}
+
+{{#if personal.location}}
+\vspace{3pt}
+{{personal.location}}
+\par
+{{/if}}
+}
+
+{{#if personal.links}}
+\vspace{4pt}
+{\small
+{{#each personal.links}}
+\href{ {{~url~}} }{ {{~label~}} }
+\par
+\vspace{2pt}
+{{/each}}
+}
+{{/if}}
+
+% =========================================================
+% SKILLS
+% =========================================================
+{{#if skills}}
+\sidebarseparator
+{\large\bfseries\color{accent}SKILLS\par}
+\vspace{3pt}
+
+{\small
+{{#each skills}}
+\textbf{\color{white}{{category}} }
+\par
+{\color{sideMuted}{{items}} }
+\par
+\vspace{4pt}
+{{/each}}
+}
+{{/if}}
+
+% =========================================================
+% CODING PROFILES
+% =========================================================
+{{#if codingProfiles}}
+\sidebarseparator
+{\large\bfseries\color{accent}CODING PROFILES\par}
+\vspace{4pt}
+
+{\small
+{{#each codingProfiles}}
+\textbf{\color{white}{{platform}} }
+\par
+
+{{#if url}}
+\href{ {{~url~}} }{ {{~username~}} }
+\par
+{{else}}
+{\color{sideMuted}{{username}} }
+\par
+{{/if}}
+
+{{#if maxRating}}
+{\color{sideMuted}Max Rating: {{maxRating}} }
+\par
+{{/if}}
+
+{{#if problemsSolved}}
+{\color{sideMuted}Solved: {{problemsSolved}} }
+\par
+{{/if}}
+
+{{#if contestsParticipated}}
+{\color{sideMuted}Contests: {{contestsParticipated}} }
+\par
+{{/if}}
+
+\vspace{4pt}
+{{/each}}
+}
+{{/if}}
+
+% =========================================================
+% CERTIFICATIONS
+% =========================================================
+{{#if certifications}}
+\sidebarseparator
+{\large\bfseries\color{accent}CERTIFICATIONS\par}
+\vspace{3pt}
+
+{\small
+{{#each certifications}}
+\textbf{\color{white}{{name}} }
+\par
+
+{{#if issuer}}
+{\color{sideMuted}{{issuer}} }
+\par
+{{/if}}
+
+{{#if date}}
+{\color{sideMuted}{{date}} }
+\par
+{{/if}}
+
+\vspace{4pt}
+{{/each}}
+}
+{{/if}}
+
+% =========================================================
+% MAIN COLUMN
+% =========================================================
+\switchcolumn
+\color{bodytext}
+
+% PROFILE
+{{#if summary}}
+\section{Profile}
+{{summary}}
+\par
+{{/if}}
+
+% =========================================================
+% EDUCATION
+% =========================================================
+{{#if education}}
+\section{Education}
+
+{{#each education}}
+\textbf{\color{heading}{{institution}} }
+\par
+
+{\small\color{muted}
+{{startDate}} -- {{endDate}}
+}
+\par
+
+\textit{ {{~degree~}} -- {{field}} }
+{{#if cgpa}}
+\hfill {\small CGPA: {{cgpa}} }
+{{/if}}
+\par
+
+{{#if description}}
+{{description}}
+\par
+{{/if}}
+
+\vspace{3pt}
+{{/each}}
+{{/if}}
+
+% =========================================================
+% EXPERIENCE
+% =========================================================
+{{#if experience}}
+\section{Experience}
+
+{{#each experience}}
+\textbf{\color{heading}{{role}} }
+\par
+
+{\small\color{muted}
+{{company}}
+{{#if location}}
+\enspace | \enspace {{location}}
+{{/if}}
+\enspace | \enspace {{startDate}} -- {{endDate}}
+}
+\par
+
+{{#if bullets}}
+\begin{itemize}
+    {{#each bullets}}
+    \item {{this}}
+    {{/each}}
+\end{itemize}
+{{/if}}
+
+\vspace{2pt}
+{{/each}}
+{{/if}}
+
+% =========================================================
+% PROJECTS
+% =========================================================
+{{#if projects}}
+\section{Projects}
+
+{{#each projects}}
+\textbf{\color{heading}{{name}} }
+\hfill
+{\small
+{{#if github}}
+\href{ {{~github~}} }{GitHub}
+{{/if}}
+{{#if liveUrl}}
+{{#if github}}
+\enspace | \enspace
+{{/if}}
+\href{ {{~liveUrl~}} }{Live Demo}
+{{/if}}
+}
+\par
+
+{{#if technologies}}
+{\small\color{muted}
+\textit{Tech:} {{technologies}}
+}
+\par
+{{/if}}
+
+{{#if description}}
+{{description}}
+\par
+{{/if}}
+
+{{#if bullets}}
+\begin{itemize}
+    {{#each bullets}}
+    \item {{this}}
+    {{/each}}
+\end{itemize}
+{{/if}}
+
+\vspace{2pt}
+{{/each}}
+{{/if}}
+
+% =========================================================
+% ACHIEVEMENTS
+% =========================================================
+{{#if achievements}}
+\section{Achievements}
+
+\begin{itemize}
+    {{#each achievements}}
+    \item
+    \textbf{\color{heading}{{title}} }
+    {{#if description}}
+    -- {{description}}
+    {{/if}}
+    {{/each}}
+\end{itemize}
+{{/if}}
+
+\end{paracol}
+\end{document}

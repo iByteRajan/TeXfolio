@@ -1,0 +1,182 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=0.65in]{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{xcolor}
+
+\definecolor{primary}{HTML}{E83E8C}
+\definecolor{textdark}{HTML}{212529}
+
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+
+\titleformat{\section}
+    {\Large\bfseries\color{primary}}
+    {}
+    {0em}
+    {}
+    [{\color{primary}\titlerule}]
+
+\setlist[itemize]{
+    leftmargin=*,
+    noitemsep,
+    topsep=2pt,
+    label={\color{primary}\textbullet}
+}
+
+\begin{document}
+\color{textdark}
+
+% =========================
+% PERSONAL INFORMATION
+% =========================
+\begin{center}
+    {\Huge \textbf{\color{primary} {{~personal.name~}} } }
+    \vspace{6pt}
+
+    {\large {{personal.email}} \,|\, {{personal.phone}} \,|\, {{personal.location}} }
+    \vspace{4pt}
+
+    {{#each personal.links}}
+        {{#if @index}} \,|\, {{/if}}
+        \href{ {{url}} }{ \textcolor{primary}{ {{label}} } }
+    {{/each}}
+\end{center}
+
+\vspace{0.5em}
+
+
+% =========================
+% SUMMARY
+% =========================
+{{#if summary}}
+\section{Summary}
+{{summary}}
+{{/if}}
+
+
+% =========================
+% EDUCATION
+% =========================
+{{#if education}}
+\section{Education}
+
+{{#each education}}
+\textbf{ {{~institution~}} } \hfill {{startDate}} -- {{endDate}}
+
+\textit{ {{~degree}} -- {{field~}} } \hfill {{cgpa}}
+
+{{#if description}}
+{{description}}
+{{/if}}
+
+\vspace{4pt}
+
+{{/each}}
+{{/if}}
+
+
+% =========================
+% EXPERIENCE
+% =========================
+{{#if experience}}
+\section{Experience}
+
+{{#each experience}}
+\textbf{ {{~role~}} } \hfill {{startDate}} -- {{endDate}}
+
+\textit{ {{~company~}} } \hfill {{location}}
+
+\begin{itemize}
+{{#each bullets}}
+    \item {{this}}
+{{/each}}
+\end{itemize}
+
+{{/each}}
+{{/if}}
+
+
+% =========================
+% PROJECTS
+% =========================
+{{#if projects}}
+\section{Projects}
+
+{{#each projects}}
+
+\noindent
+\textbf{ {{~name~}} }
+\hfill
+{{#if github}}
+\href{ {{~github~}} }{GitHub}
+{{/if}}
+{{#if liveUrl}}
+{{#if github}} \,|\, {{/if}}
+\href{ {{~liveUrl~}} }{Live}
+{{/if}}
+
+{{#if technologies}}
+\textit{ {{technologies}} }
+{{/if}}
+
+{{#if description}}
+{{description}}
+{{/if}}
+
+\begin{itemize}
+{{#each bullets}}
+    \item {{this}}
+{{/each}}
+\end{itemize}
+
+{{/each}}
+{{/if}}
+
+
+% =========================
+% SKILLS
+% =========================
+{{#if skills}}
+\section{Technical Skills}
+
+{{#each skills}}
+\textbf{ {{~category~}} }: {{items}}
+
+{{/each}}
+{{/if}}
+
+
+% =========================
+% ACHIEVEMENTS
+% =========================
+{{#if achievements}}
+\section{Achievements}
+
+\begin{itemize}
+{{#each achievements}}
+    \item \textbf{ {{~title~}} }: {{description}}
+{{/each}}
+\end{itemize}
+
+{{/if}}
+
+
+% =========================
+% CERTIFICATIONS
+% =========================
+{{#if certifications}}
+\section{Certifications}
+
+\begin{itemize}
+{{#each certifications}}
+    \item \textbf{ {{~name~}} } -- {{issuer}} ({{date}})
+{{/each}}
+\end{itemize}
+
+{{/if}}
+
+\end{document}

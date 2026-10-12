@@ -1,0 +1,302 @@
+
+\documentclass[10pt,a4paper]{article}
+
+% =========================================================
+% PACKAGES
+% =========================================================
+\usepackage[
+    a4paper,
+    top=0.42in,
+    bottom=0.45in,
+    left=0.62in,
+    right=0.62in
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+% =========================================================
+% COLORS
+% =========================================================
+\definecolor{navy}{HTML}{172554}
+\definecolor{accent}{HTML}{2563EB}
+\definecolor{bodytext}{HTML}{273449}
+\definecolor{muted}{HTML}{64748B}
+\definecolor{rulecolor}{HTML}{CBD5E1}
+\definecolor{lightblue}{HTML}{EFF6FF}
+
+\usepackage[
+    colorlinks=true,
+    urlcolor=accent,
+    linkcolor=accent,
+    citecolor=accent
+]{hyperref}
+
+% =========================================================
+% GENERAL SETTINGS
+% =========================================================
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt}
+\setlength{\emergencystretch}{2em}
+\linespread{1.0}
+\urlstyle{same}
+\raggedbottom
+\raggedright
+
+\setlist[itemize]{
+    leftmargin=1.3em,
+    itemsep=1pt,
+    topsep=2pt,
+    parsep=0pt,
+    partopsep=0pt
+}
+
+% =========================================================
+% SECTION STYLING
+% =========================================================
+\titleformat{\section}
+    {\normalsize\bfseries\color{navy}}
+    {}
+    {0pt}
+    {\MakeUppercase}
+    [\vspace{-2pt}{\color{rulecolor}\titlerule}]
+
+\titlespacing*{\section}{0pt}{7pt}{3pt}
+
+% =========================================================
+% DOCUMENT
+% =========================================================
+\begin{document}
+\color{bodytext}
+
+% =========================================================
+% HEADER
+% =========================================================
+{\color{navy}\fontsize{25}{28}\selectfont
+\bfseries {{personal.name}}
+\par}
+
+\vspace{3pt}
+
+{\small\color{muted}
+{{personal.email}}
+{{#if personal.phone}}
+\enspace | \enspace {{personal.phone}}
+{{/if}}
+{{#if personal.location}}
+\enspace | \enspace {{personal.location}}
+{{/if}}
+\par}
+
+{{#if personal.links}}
+\vspace{2pt}
+{\small
+{{#each personal.links}}
+{{#if @index}}
+\enspace | \enspace
+{{/if}}
+\href{ {{~url~}} }{ {{~label~}} }
+{{/each}}
+\par}
+{{/if}}
+
+\vspace{5pt}
+{\color{accent}\rule{\textwidth}{2pt}}
+\par
+\vspace{1pt}
+
+% =========================================================
+% PROFILE
+% =========================================================
+{{#if summary}}
+\section{Profile}
+{{summary}}
+\par
+{{/if}}
+
+% =========================================================
+% EDUCATION
+% =========================================================
+{{#if education}}
+\section{Education}
+
+{{#each education}}
+\textbf{\color{navy}{{institution}} }
+\hfill
+{\small\color{muted}{{startDate}} -- {{endDate}} }
+\par
+
+\textit{ {{~degree~}} -- {{field}} }
+{{#if cgpa}}
+\hfill
+{\small\color{muted}CGPA/GPA: {{cgpa}} }
+{{/if}}
+\par
+
+{{#if description}}
+{{description}}
+\par
+{{/if}}
+
+\vspace{2pt}
+{{/each}}
+{{/if}}
+
+% =========================================================
+% EXPERIENCE
+% =========================================================
+{{#if experience}}
+\section{Experience}
+
+{{#each experience}}
+\textbf{\color{navy}{{role}} }
+\hfill
+{\small\color{muted}{{startDate}} -- {{endDate}} }
+\par
+
+{\small\textit{ {{~company~}} }
+{{#if location}}
+\enspace | \enspace {{location}}
+{{/if}}
+}
+\par
+
+{{#if bullets}}
+\begin{itemize}
+    {{#each bullets}}
+    \item {{this}}
+    {{/each}}
+\end{itemize}
+{{/if}}
+
+\vspace{2pt}
+{{/each}}
+{{/if}}
+
+% =========================================================
+% PROJECTS
+% =========================================================
+{{#if projects}}
+\section{Projects}
+
+{{#each projects}}
+\textbf{\color{navy}{{name}} }
+\hfill
+{\small
+{{#if github}}
+\href{ {{~github~}} }{GitHub}
+{{/if}}
+{{#if liveUrl}}
+{{#if github}}
+\enspace | \enspace
+{{/if}}
+\href{ {{~liveUrl~}} }{Live Demo}
+{{/if}}
+}
+\par
+
+{{#if technologies}}
+{\small\color{muted}
+\textit{Tech:} {{technologies}}
+}
+\par
+{{/if}}
+
+{{#if description}}
+{{description}}
+\par
+{{/if}}
+
+{{#if bullets}}
+\begin{itemize}
+    {{#each bullets}}
+    \item {{this}}
+    {{/each}}
+\end{itemize}
+{{/if}}
+
+\vspace{2pt}
+{{/each}}
+{{/if}}
+
+% =========================================================
+% TECHNICAL SKILLS
+% =========================================================
+{{#if skills}}
+\section{Technical Skills}
+
+{{#each skills}}
+\textbf{\color{navy}{{category}}:}
+{{items}}
+\par
+\vspace{1pt}
+{{/each}}
+{{/if}}
+
+% =========================================================
+% ACHIEVEMENTS
+% =========================================================
+{{#if achievements}}
+\section{Achievements}
+
+\begin{itemize}
+    {{#each achievements}}
+    \item \textbf{\color{navy}{{title}} }
+    {{#if description}}
+    -- {{description}}
+    {{/if}}
+    {{/each}}
+\end{itemize}
+{{/if}}
+
+% =========================================================
+% CERTIFICATIONS
+% =========================================================
+{{#if certifications}}
+\section{Certifications}
+
+\begin{itemize}
+    {{#each certifications}}
+    \item \textbf{\color{navy}{{name}} }
+    {{#if issuer}}
+    -- {{issuer}}
+    {{/if}}
+    {{#if date}}
+    {\small\color{muted} ({{date}})}
+    {{/if}}
+    {{/each}}
+\end{itemize}
+{{/if}}
+
+% =========================================================
+% CODING PROFILES
+% =========================================================
+{{#if codingProfiles}}
+\section{Coding Profiles}
+
+\begin{itemize}
+    {{#each codingProfiles}}
+    \item
+    \textbf{\color{navy}{{platform}}:}
+    {{#if url}}
+    \href{ {{~url~}} }{ {{~username~}} }
+    {{else}}
+    {{username}}
+    {{/if}}
+    {{#if maxRating}}
+    \enspace (Max Rating: {{maxRating}})
+    {{/if}}
+    {{#if problemsSolved}}
+    \enspace | \enspace Solved: {{problemsSolved}}
+    {{/if}}
+    {{#if contestsParticipated}}
+    \enspace | \enspace Contests: {{contestsParticipated}}
+    {{/if}}
+    {{/each}}
+\end{itemize}
+{{/if}}
+
+\end{document}
