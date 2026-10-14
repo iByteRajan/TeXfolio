@@ -125,38 +125,86 @@ function Dashboard() {
 
      `}</style>
 
-            {/* Navigation */}
 
             <header className="sticky top-0 z-50 border-b border-indigo-100/80 bg-white/95 shadow-sm shadow-indigo-950/[0.04] backdrop-blur-xl">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
 
-                    <Link to="/dashboard" className="group flex items-center gap-3">
+                    <Link to="/dashboard" className="inline-flex items-center gap-1">
+                        <svg
+                            viewBox="0 0 64 80"
+                            className="h-14 w-12 shrink-0"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                        >
+                            <defs>
+                                <linearGradient id="ribbonTop" x1="20" y1="12" x2="49" y2="35">
+                                    <stop offset="0%" stopColor="#E0E7FF" />
+                                    <stop offset="100%" stopColor="#A5B4FC" />
+                                </linearGradient>
 
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#312E81] to-[#4338CA] text-white shadow-lg shadow-indigo-900/20 transition duration-300 group-hover:rotate-[-4deg] group-hover:scale-105">
+                                <linearGradient id="ribbonBody" x1="10" y1="24" x2="35" y2="67">
+                                    <stop offset="0%" stopColor="#4338CA" />
+                                    <stop offset="100%" stopColor="#4F46E5" />
+                                </linearGradient>
 
-                            <FileIcon className="h-6 w-6" />
+                                <linearGradient id="ribbonInner" x1="12" y1="30" x2="31" y2="56">
+                                    <stop offset="0%" stopColor="#6366F1" />
+                                    <stop offset="100%" stopColor="#312E81" />
+                                </linearGradient>
+                            </defs>
 
-                        </div>
+                            <path
+                                d="M10 24 Q10 20 15 18 L48 3 L48 24 L28 37 Z"
+                                fill="url(#ribbonTop)"
+                                opacity="0.88"
+                            />
 
-                        <span className="text-lg font-extrabold tracking-tight text-slate-900">Resume<span className="text-indigo-600">Studio</span></span>
+                            <path
+                                d="M10 24 Q10 19 16 21 L28 27 L28 70 L12 62 Q10 61 10 57 Z"
+                                fill="url(#ribbonBody)"
+                            />
 
+                            <path
+                                d="M10 24 Q10 19 16 21 L28 27 L28 40 L10 57 Z"
+                                fill="url(#ribbonInner)"
+                            />
+
+                            <path
+                                d="M16 21 L28 27 L28 40 L10 29 L10 24 Q10 21 16 21 Z"
+                                fill="#4F46E5"
+                                opacity="0.9"
+                            />
+                        </svg>
+
+                        <span className="text-[21px] font-extrabold tracking-[-0.8px] text-[#171B35]">
+                            TeX<span className="text-[#5546E8]">folio</span>
+                        </span>
                     </Link>
+
 
                     <div className="flex items-center gap-2 sm:gap-4">
 
-                        <Link to="/profile" className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-800 sm:inline-flex">My Profile</Link>
+                        <Link to="/profile" className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-800 sm:inline-flex">Master Resume</Link>
 
                         <Link to="/templates" className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-800 sm:inline-flex">Templates</Link>
 
                         <div className="mx-1 hidden h-8 w-px bg-slate-200 sm:block" />
 
-                        <div className="flex items-center gap-2.5">
+                        <Link
+                            to="/profile"
+                            className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 transition hover:bg-indigo-50"
+                        >
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-indigo-100 bg-indigo-100 text-sm font-extrabold text-indigo-800">
+                                {initial}
+                            </div>
 
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-indigo-100 bg-indigo-100 text-sm font-extrabold text-indigo-800">{initial}</div>
-
-                            <div className="hidden md:block"><p className="max-w-32 truncate text-sm font-bold text-slate-800">{displayName}</p><p className="text-xs text-slate-500">Your workspace</p></div>
-
-                        </div>
+                            <div className="hidden md:block">
+                                <p className="max-w-32 truncate text-sm font-bold text-slate-800">
+                                    {displayName}
+                                </p>
+                                <p className="text-xs text-slate-500">Your workspace</p>
+                            </div>
+                        </Link>
 
                         <button onClick={handleLogout} title="Sign out" aria-label="Sign out" className="ml-1 flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600">
 
@@ -172,7 +220,6 @@ function Dashboard() {
 
             <main>
 
-                {/* Hero: animated indigo gradient and resume preview */}
 
                 <section className="px-4 pt-6 sm:px-6 lg:px-10 lg:pt-8">
 
@@ -198,7 +245,7 @@ function Dashboard() {
 
                                 <h1 className="max-w-xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-[2.7rem]">Your next job deserves a <span className="text-indigo-200">better resume.</span></h1>
 
-                                <p className="mt-4 max-w-lg text-sm leading-6 text-indigo-100/85 sm:text-base">Turn your experience into a resume tailored to the job you want. We'll guide you through the process, step by step.</p>
+                                <p className="mt-4 max-w-lg text-sm leading-6 text-indigo-100/85 sm:text-base">Resume Studio helps organize your career details and present them in a way that fits the role you're applying for. You remain in control of the final content.</p>
 
                                 <div className="mt-6 flex flex-wrap items-center gap-3">
                                     <Link
@@ -276,7 +323,6 @@ function Dashboard() {
 
                             <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#1E1B4B] sm:text-4xl">From your experience to your next opportunity</h2>
 
-                            <p className="mt-4 leading-7 text-slate-600">You don't need to understand every tool. Just follow these simple steps to build a role-specific resume.</p>
 
                         </div>
 
@@ -352,7 +398,7 @@ function Dashboard() {
 
                 {/* Final CTA */}
 
-                <section className="px-4 py-12 sm:px-6 sm:py-16 lg:px-10">
+                {/* <section className="px-4 py-12 sm:px-6 sm:py-16 lg:px-10">
 
                     <div className="rs-hero-gradient relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-br from-[#1E1B4B] via-[#312E81] to-[#4338CA] px-6 py-11 text-center text-white shadow-xl shadow-indigo-950/15 sm:px-12 sm:py-14">
 
@@ -391,7 +437,7 @@ function Dashboard() {
 
                     </div>
 
-                </section>
+                </section> */}
 
             </main>
 

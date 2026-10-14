@@ -1,3 +1,4 @@
+
 import {
     createContext,
     useContext,
@@ -19,11 +20,7 @@ export const AuthProvider = ({ children }) => {
             password
         });
 
-        localStorage.setItem(
-            "token",
-            response.data.token
-        );
-
+        localStorage.setItem("token", response.data.token);
         setUser(response.data.user);
     };
 
@@ -34,12 +31,19 @@ export const AuthProvider = ({ children }) => {
             password
         });
 
-        localStorage.setItem(
-            "token",
-            response.data.token
+        localStorage.setItem("token", response.data.token);
+        setUser(response.data.user);
+    };
+
+    const updateUser = async (profileData) => {
+        const response = await api.patch(
+            "/auth/me",
+            profileData
         );
 
         setUser(response.data.user);
+
+        return response.data.user;
     };
 
     const logout = () => {
@@ -58,7 +62,6 @@ export const AuthProvider = ({ children }) => {
 
             try {
                 const response = await api.get("/auth/me");
-
                 setUser(response.data.user);
             } catch (error) {
                 localStorage.removeItem("token");
@@ -78,7 +81,8 @@ export const AuthProvider = ({ children }) => {
                 loading,
                 login,
                 register,
-                logout
+                logout,
+                updateUser
             }}
         >
             {children}
@@ -86,6 +90,4 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);

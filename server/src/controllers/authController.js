@@ -114,8 +114,93 @@ const getMe = async (req, res) => {
     }
 };
 
+
+
+const updateProfile = async (req, res) => {
+    try {
+        const { name, email } = req.body;
+
+        // Find only the authenticated user's account
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        // Validate the supplied fields
+        if (name !== undefined) {
+            if (typeof name !== "string" || !name.trim()) {
+                return res.status(400).json({
+                    message: "Name cannot be empty"
+                });
+            }
+
+            user.name = name.trim();
+        }
+
+        if (email !== undefined) {
+            if (typeof email !== "string" || !email.trim()) {
+                return res.status(400).json({
+                    message: "Email cannot be empty"
+                });
+            }
+
+            const normalizedEmail = email.trim().toLowerCase();
+
+            // Check whether another account uses this email
+            const existingUser = await User.findOne({
+                email: normalizedEmail,
+                _id: { $ne: user._id }
+            });
+
+            if (existingUser) {
+                return res.status(409).json({
+                    message: "This email is already registered"
+                });
+            }
+
+            user.email = normalizedEmail;
+        }
+
+        await user.save();
+
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
+            }
+        });
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(409).json({
+                message: "This email is already registered"
+            });
+        }
+
+        if (error.name === "ValidationError") {
+            return res.status(400).json({
+                message: error.message
+            });
+        }
+
+        console.error("Profile update error:", error);
+
+        return res.status(500).json({
+            message: "Unable to update profile"
+        });
+    }
+};
+
+
 module.exports = {
     register,
     login,
-    getMe
+    getMe,
+    updateProfile
 };

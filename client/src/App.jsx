@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import MasterResume from "./pages/MasterResume";
 import ResumeStudio from "./pages/ResumeStudio";
 import TemplateSelection from "./pages/TemplateSelection";
 
@@ -60,6 +61,15 @@ function AppRoutes() {
                 element={
                     <ProtectedRoute>
                         <Profile />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/masterresume"
+                element={
+                    <ProtectedRoute>
+                        <MasterResume />
                     </ProtectedRoute>
                 }
             />
